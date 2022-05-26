@@ -164,23 +164,79 @@ class Customer:
         self.login()
 
 class Admin:
+        def __init__(self):
+            self.admin_username=''
 
         def admin_area(self):
             entry= input('Please choose from the option \n 1.Login \n 2.Previous Menu \n 3.Exit \n')
             if entry == '1':
-                username=input('Please enter your Username: \n')
-                password=input('Please enter your Password: \n')
+                self.admin_username=input('Please enter your Username: \n')
+                with con:
+                    db_adminlist = cur.execute("SELECT Username FROM Admins7_Info")
+                    user_found=False
+                    for db_admin in db_adminlist:
+                        if  db_admin[0] == self.admin_username:
+                            user_found=True
+                            counter=0
+                            while True:
+                                if counter==3:
+                                    print('Done with your password attempt')
+                                    break
+                                password=input('Please enter the password: ')
+                                db_password=cur.execute(f"SELECT Password FROM Admins7_Info WHERE Username = '{self.admin_username}'")
+                                for db_pw in db_password:
+                                    if db_pw[0] == password:
+                                        print('welcome!!!')
+                                        return self.admin_main_menu()
+                                    else:
+                                        print('Wrong Password!!Please try again')
+                                        counter+=1
+            if user_found==False:
+                print('Username is unavailable')
+
+                #self.admin_main_menu()
 
             elif entry== '2':
                 return self.user_type()
             else:
                 systemExist
 
+        def admin_main_menu(self):
+            print(f'*****Welcome  { self.admin_username} *****')
+            process = input('Please choose the number \n 1.Customer Details \n 2.Delete The Customer Details \n 3.Add The New Customer Details \n')
+            
+            if process =='1':
+                #my_conn = my_connect.cursor()
+                users=cur.execute("SELECT Username, Address, Phone_num FROM USER ")
+                #columns = cur.fetchall()
+                #print(users)
 
-    
+                i=0
+                for user in users:
+                    for j in range(len(user)):
+                        print(user[j],end=' ')
+                    i=i+1
+                    print()
+            
+            elif process == '2':
+                username_delete=(input('Enter the username to delete: '))
+                columns = cur.fetchall()
+                delete_box=cur.execute(f"DELETE from USER WHERE Username = {username_delete}" )
+                delete_box.delete(0, END)
+
+
+            elif process == '3' :
+                Username = input('enter your Username: ')
+                Balance = int(input('enter your balance: '))
+                Address=input('Enter your address: ')
+                Phone_num=int(input('Enter your Phone Number: '))
+                Password=input('Enter your Password: ')
+                cur.execute("""
+                INSERT INTO USER(Username, Balance, Address, Phone_num, Password )
+                VALUES (?,?,?,?,?)
+                """, (Username, Balance, Address, Phone_num, Password ))
+                con.commit ()
+                print ( '****Data Signed up successfully!!!**** ' )                
   
 d = Logging()
 d.welcome_page()
-
-
-
