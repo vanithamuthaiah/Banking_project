@@ -218,13 +218,6 @@ class Admin:
                     i=i+1
                     print()
             
-            elif process == '2':
-                username_delete=(input('Enter the username to delete: '))
-                columns = cur.fetchall()
-                delete_box=cur.execute(f"DELETE from USER WHERE Username = {username_delete}" )
-                delete_box.delete(0, END)
-
-
             elif process == '3' :
                 Username = input('enter your Username: ')
                 Balance = int(input('enter your balance: '))
@@ -240,3 +233,10 @@ class Admin:
   
 d = Logging()
 d.welcome_page()
+
+''' elif process == '2':
+                username_delete=(input('Enter the username to delete: '))
+                columns = cur.fetchall()
+                delete_box=cur.execute(f"DELETE from USER WHERE Username = {username_delete}" )
+                delete_box.delete(0, END)
+'''
